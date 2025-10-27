@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Giải Đấu V-League 2025</title>
+    <!-- Tải Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tải font Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        // Tùy chỉnh Tailwind để sử dụng font Inter
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7f6; /* Màu nền xám rất nhạt */
+        }
+        /* Ẩn các trang không hoạt động */
+        .page-content {
+            display: none;
+        }
+        /* Hiển thị trang hoạt động */
+        .page-content.active {
+            display: block;
+        }
+        /* Kiểu cho nav link */
+        .nav-link {
+            /*margin-right: 20px;*/
+        }
+        /* Kiểu cho nav link được chọn */
+        .nav-link.active {
+            color: blue;
+        }
+
+        /* --- Kiểu cho tab thống kê --- */
+        .stats-tab-content {
+            display: none;
+        }
+        .stats-tab-content.active {
+            display: block;
+        }
+        .stats-nav-link {
+            @apply whitespace-nowrap py-3 px-5 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300;
+        }
+        .stats-nav-link.active {
+            @apply border-blue-600 text-blue-600;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Header -->
+    <header class="bg-white text-gray-900 shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-5">
+            <h1 class="text-3xl font-bold tracking-tight text-blue-800">Giải Đấu V-League 2025</h1>
+            <p class="text-lg text-gray-600">Giai đoạn Vòng Bảng</p>
+        </div>
+        
+        <!-- Thanh Điều Hướng (Navigation) -->
+        <nav class="bg-white border-t border-gray-200">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center space-x-2 overflow-x-auto py-2" style ="justify-content: center;">
+                    <!-- Nút điều hướng, gọi hàm showPage() khi click -->
+                    <button id="nav-bang-xep-hang" class="nav-link active" style ="margin-right: 20px;" onclick="showPage('page-bang-xep-hang', this)">
+                        Bảng Xếp Hạng
+                    </button>
+                    <button id="nav-vong-bang" class="nav-link" style ="margin-right: 20px;" onclick="showPage('page-vong-bang', this)">
+                        Lịch/Kết Quả Vòng Bảng
+                    </button>
+                    <button id="nav-vong-loai" class="nav-link" style ="margin-right: 20px;" onclick="showPage('page-vong-loai', this)">
+                        Vòng Loại Trực Tiếp
+                    </button>
+                    <button id="nav-doi-thi-dau" class="nav-link" style ="margin-right: 20px;" onclick="showPage('page-doi-thi-dau', this)">
+                        Đội Thi Đấu
+                    </button>
+                    <button id="nav-thong-ke" class="nav-link" style ="margin-right: 20px;" onclick="showPage('page-thong-ke', this)">
+                        Thống Kê
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content - Chứa tất cả các "trang" -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Trang 1: Bảng Xếp Hạng (Cập nhật từ file cũ) -->
+        <div id="page-bang-xep-hang" class="page-content active">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">BẢNG XẾP HẠNG VÒNG BẢNG</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+                
+                <!-- Bảng A -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
+                    <div class="bg-blue-700 text-white p-4"><h3 class="text-2xl font-bold text-center">BẢNG A</h3></div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hạng</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Đội Bóng</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" title="Số Trận">Trận</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" title="Thắng">T</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" title="Hòa">H</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" title="Bại">B</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" title="Hiệu Số">HS</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider" title="Điểm">Đ</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <!-- Đội 1 -->
+                                <tr>
+                                    <td class="px-3 py-3">1</td>
+                                    <td class="px-4 py-3">
+                                        <div class="flex items-center"><img class="h-8 w-8 rounded-full" src="https://placehold.co/40x40/E02424/FFFFFF?text=HFC" alt="Logo"><span class="ml-3 font-medium">Hanoi FC</span></div>
+                                    </td>
+                                    <td class="px-2 py-3 text-center">2</td>
+                                    <td class="px-2 py-3 text-center">2</td>
+                                    <td class="px-2 py-3 text-center">0</td>
+                                    <td class="px-2 py-3 text-center">0</td>
+                                    <td class="px-2 py-3 text-center">+4</td>
+                                    <td class="px-2 py-3 text-center font-bold">6</td>
+                                </tr>
+                                <!-- Đội 2 -->
+                                <tr>
+                                    <td class="px-3 py-3">2</td>
+                                    <td class="px-4 py-3">
+                                        <div class="flex items-center"><img class="h-8 w-8 rounded-full" src="https://placehold.co/40x40/F59E0B/FFFFFF?text=HAGL" alt="Logo"><span class="ml-3 font-medium">Hoang Anh Gia Lai</span></div>
+                                    </td>
+                                    <td class="px-2 py-3 text-center">2</td>
+                                    <td class="px-2 py-3 text-center">1</td>
+                                    <td class="px-2 py-3 text-center">1</td>
+                                    <td class="px-2 py-3 text-center">0</td>
+                                    <td class="px-2 py-3 text-center">+1</td>
+                                    <td class="px-2 py-3 text-center font-bold">4</td>
+                                </tr>
+                                <!-- Đội 3 -->
+                                <tr>
+                                    <td class="px-3 py-3">3</td>
+                                    <td class="px-4 py-3">
+                                        <div class="flex items-center"><img class="h-8 w-8 rounded-full" src="https://placehold.co/40x40/15803D/FFFFFF?text=SLNA" alt="Logo"><span class="ml-3 font-medium">Song Lam Nghe An</span></div>
+                                    </td>
+                                    <td class="px-2 py-3 text-center">2</td>
+                                    <td class="px-2 py-3 text-center">0</td>
+                                    <td class="px-2 py-3 text-center">1</td>
+                                    <td class="px-2 py-3 text-center">1</td>
+                                    <td class="px-2 py-3 text-center">-2</td>
+                                    <td class="px-2 py-3 text-center font-bold">1</td>
+                                </tr>
+                                <!-- Đội 4 -->
+                                <tr>
+                                    <td class="px-3 py-3">4</td>
+                                    <td class="px-4 py-3">
+                                        <div class="flex items-center"><img class="h-8 w-8 rounded-full" src="https://placehold.co/40x40/7C3AED/FFFFFF?text=BD" alt="Logo"><span class="ml-3 font-medium">Binh Dinh FC</span></div>
+                                    </td>
+                                    <td class="px-2 py-3 text-center">2</td>
+                                    <td class="px-2 py-3 text-center">0</td>
+                                    <td class="px-2 py-3 text-center">0</td>
+                                    <td class="px-2 py-3 text-center">2</td>
+                                    <td class="px-2 py-3 text-center">-3</td>
+                                    <td class="px-2 py-3 text-center font-bold">0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Bảng B -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
+                    <div class="bg-green-700 text-white p-4"><h3 class="text-2xl font-bold text-center">BẢNG B</h3></div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hạng</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Đội Bóng</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Trận</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">T</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">H</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">B</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">HS</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Đ</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <!-- Lặp lại cấu trúc hàng cho Bảng B -->
+                                <tr><td colspan="8" class="p-4 text-center text-gray-500">(Dữ liệu bảng B)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Bảng C -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
+                    <div class="bg-yellow-600 text-white p-4"><h3 class="text-2xl font-bold text-center">BẢNG C</h3></div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hạng</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Đội Bóng</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Trận</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">T</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">H</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">B</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">HS</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Đ</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <!-- Lặp lại cấu trúc hàng cho Bảng C -->
+                                <tr><td colspan="8" class="p-4 text-center text-gray-500">(Dữ liệu bảng C)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Bảng D -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
+                    <div class="bg-red-700 text-white p-4"><h3 class="text-2xl font-bold text-center">BẢNG D</h3></div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hạng</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Đội Bóng</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Trận</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">T</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">H</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">B</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">HS</th>
+                                    <th class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Đ</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <!-- Lặp lại cấu trúc hàng cho Bảng D -->
+                                <tr><td colspan="8" class="p-4 text-center text-gray-500">(Dữ liệu bảng D)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trang 2: Lịch/Kết Quả Vòng Bảng -->
+        <div id="page-vong-bang" class="page-content">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">LỊCH THI ĐẤU & KẾT QUẢ VÒNG BẢNG</h2>
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="p-6 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-blue-700">Bảng A</h3>
+                </div>
+                <div class="divide-y divide-gray-200">
+                    <!-- Trận 1 -->
+                    <div class="p-6 grid grid-cols-3 items-center">
+                        <div class="flex items-center space-x-3 justify-end">
+                            <span class="text-base font-semibold text-gray-900 hidden sm:inline">Hanoi FC</span>
+                            <img class="h-10 w-10 rounded-full" src="https://placehold.co/40x40/E02424/FFFFFF?text=HFC" alt="Logo">
+                        </div>
+                        <div class="text-center">
+                            <span class="px-4 py-2 bg-gray-200 text-gray-800 rounded-full text-xl font-bold">3 - 1</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <img class="h-10 w-10 rounded-full" src="https://placehold.co/40x40/15803D/FFFFFF?text=SLNA" alt="Logo">
+                            <span class="text-base font-semibold text-gray-900 hidden sm:inline">Song Lam Nghe An</span>
+                        </div>
+                    </div>
+                    <!-- Trận 2 -->
+                    <div class="p-6 grid grid-cols-3 items-center">
+                        <div class="flex items-center space-x-3 justify-end">
+                            <span class="text-base font-semibold text-gray-900 hidden sm:inline">Hoang Anh Gia Lai</span>
+                            <img class="h-10 w-10 rounded-full" src="https://placehold.co/40x40/F59E0B/FFFFFF?text=HAGL" alt="Logo">
+                        </div>
+                        <div class="text-center">
+                            <span class="px-4 py-2 bg-gray-200 text-gray-800 rounded-full text-xl font-bold">1 - 1</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <img class="h-10 w-10 rounded-full" src="https://placehold.co/40x40/7C3AED/FFFFFF?text=BD" alt="Logo">
+                            <span class="text-base font-semibold text-gray-900 hidden sm:inline">Binh Dinh FC</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Các bảng khác -->
+            </div>
+        </div>
+
+        <!-- Trang 3: Vòng Loại Trực Tiếp -->
+        <div id="page-vong-loai" class="page-content">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">VÒNG LOẠI TRỰC TIẾP</h2>
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-xl font-semibold text-center text-gray-700">Sơ Đồ Thi Đấu</h3>
+                <p class="text-center text-gray-500 mt-4">(Nội dung sơ đồ vòng loại trực tiếp sẽ hiển thị ở đây)</p>
+                <!-- Bạn có thể thêm sơ đồ dạng bracket ở đây -->
+            </div>
+        </div>
+
+        <!-- Trang 4: Đội Thi Đấu -->
+        <div id="page-doi-thi-dau" class="page-content">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">DANH SÁCH ĐỘI THI ĐẤU</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Thẻ 1 đội -->
+                <div class="bg-white rounded-xl shadow-lg p-5 flex flex-col items-center">
+                    <img class="h-24 w-24 rounded-full object-cover mb-4" src="https://placehold.co/100x100/E02424/FFFFFF?text=HFC" alt="Logo Hanoi FC">
+                    <h4 class="text-xl font-semibold text-gray-900">Hanoi FC</h4>
+                    <p class="text-gray-600">Bảng A</p>
+                    <p class="text-sm text-gray-500 mt-2">Số trận đã chơi: 2</p>
+                </div>
+                <!-- Thẻ 1 đội -->
+                <div class="bg-white rounded-xl shadow-lg p-5 flex flex-col items-center">
+                    <img class="h-24 w-24 rounded-full object-cover mb-4" src="https://placehold.co/100x100/F59E0B/FFFFFF?text=HAGL" alt="Logo HAGL">
+                    <h4 class="text-xl font-semibold text-gray-900">Hoang Anh Gia Lai</h4>
+                    <p class="text-gray-600">Bảng A</p>
+                    <p class="text-sm text-gray-500 mt-2">Số trận đã chơi: 2</p>
+                </div>
+                <!-- Thêm các đội khác -->
+            </div>
+        </div>
+
+        <!-- Trang 5: Thống Kê -->
+        <div id="page-thong-ke" class="page-content">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">THỐNG KÊ GIẢI ĐẤU</h2>
+            
+            <!-- Navtabs cho Thống Kê -->
+            <div class="mb-4 border-b border-gray-200">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button class="stats-nav-link active" onclick="showStatsTab('stats-clb', this)">
+                        Thống Kê CLB
+                    </button>
+                    <button class="stats-nav-link" onclick="showStatsTab('stats-vdv', this)">
+                        Thống Kê VĐV
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Nội dung Tab Thống Kê CLB (Mặc định) -->
+            <div id="stats-clb" class="stats-tab-content active">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4">Thống Kê Câu Lạc Bộ</h3>
+                    <ul class="divide-y divide-gray-200">
+                        <li class="py-3 flex items-center justify-between">
+                            <span class="text-lg font-medium text-gray-800">Đội ghi nhiều bàn nhất:</span>
+                            <span class="text-lg font-bold text-blue-700">Hanoi FC (7 bàn)</span>
+                        </li>
+                        <li class="py-3 flex items-center justify-between">
+                            <span class="text-lg font-medium text-gray-800">Đội thủng lưới ít nhất:</span>
+                            <span class="text-lg font-bold text-blue-700">Hoang Anh Gia Lai (1 bàn)</span>
+                        </li>
+                        <li class="py-3 flex items-center justify-between">
+                            <span class="text-lg font-medium text-gray-800">Đội nhận nhiều thẻ vàng nhất:</span>
+                            <span class="text-lg font-bold text-blue-700">Song Lam Nghe An (6 thẻ)</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Nội dung Tab Thống Kê VĐV -->
+            <div id="stats-vdv" class="stats-tab-content">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4">Vua Phá Lưới</h3>
+                    <ul class="divide-y divide-gray-200">
+                        <li class="py-3 flex items-center justify-between">
+                            <span class="text-lg font-medium text-gray-800">1. Nguyễn Văn Quyết (Hanoi FC)</span>
+                            <span class="text-lg font-bold text-blue-700">3 Bàn</span>
+                        </li>
+                        <li class="py-3 flex items-center justify-between">
+                            <span class="text-lg font-medium text-gray-800">2. Rimario Gordon (HAGL)</span>
+                            <span class="text-lg font-bold text-blue-700">2 Bàn</span>
+                        </li>
+                        <li class="py-3 flex items-center justify-between">
+                            <span class="text-lg font-medium text-gray-800">3. Paollo (Viettel FC)</span>
+                            <span class="text-lg font-bold text-blue-700">2 Bàn</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-400 mt-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center">
+            <p>&copy; 2025 Ban Tổ Chức Giải Đấu. Mọi quyền được bảo lưu.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript để xử lý chuyển trang -->
+    <script>
+        // Hàm để hiển thị trang được chọn và ẩn các trang khác
+        function showPage(pageId, clickedButton) {
+            // Ẩn tất cả các trang
+            const pages = document.querySelectorAll('.page-content');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Hiển thị trang được chọn
+            const activePage = document.getElementById(pageId);
+            if (activePage) {
+                activePage.classList.add('active');
+            }
+
+            // Cập nhật trạng thái 'active' cho nút nav
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            if (clickedButton) {
+                clickedButton.classList.add('active');
+            }
+        }
+
+        // Tùy chọn: Đảm bảo trang mặc định (Bảng Xếp Hạng) được hiển thị khi tải
+        document.addEventListener('DOMContentLoaded', () => {
+            showPage('page-bang-xep-hang', document.getElementById('nav-bang-xep-hang'));
+        });
+
+        // Hàm để hiển thị tab thống kê
+        function showStatsTab(tabId, clickedButton) {
+            // Ẩn tất cả nội dung tab thống kê
+            const tabContents = document.querySelectorAll('.stats-tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Hiển thị nội dung tab được chọn
+            const activeTab = document.getElementById(tabId);
+            if (activeTab) {
+                activeTab.classList.add('active');
+            }
+
+            // Cập nhật trạng thái 'active' cho nút nav thống kê
+            const statsNavLinks = document.querySelectorAll('.stats-nav-link');
+            statsNavLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            if (clickedButton) {
+                clickedButton.classList.add('active');
+            }
+        }
+    </script>
+
+</body>
+</html>
+
