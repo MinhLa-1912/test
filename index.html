@@ -2,9 +2,8 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale-1.0">
-    <!-- Cập nhật Title -->
-    <title>Thống Kê Cầu Thủ - V-League 2025</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Các Giải Đấu</title>
     <!-- Tải Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Tải font Inter -->
@@ -27,337 +26,194 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f4f7f6; /* Màu nền xám rất nhạt */
+            background-color: #f3f4f6; /* Màu nền xám nhạt */
         }
-        
-        /* Kiểu cho nav link (CSS thông thường) */
-        .nav-link {
-            padding-left: 1rem;    /* 16px */
-            padding-right: 1rem;   /* 16px */
-            padding-top: 0.75rem;  /* 12px */
-            padding-bottom: 0.75rem; /* 12px */
-            font-size: 0.875rem;   /* 14px */
-            line-height: 1.25rem;  /* 20px */
-            font-weight: 500;
-            color: rgb(75 85 99); /* text-gray-600 */
-            border-radius: 0.375rem; /* 6px (rounded-md) */
-            transition-property: color, background-color;
-            transition-duration: 200ms;
-            cursor: pointer; /* Thêm con trỏ chuột */
-            background-color: transparent; /* Nền trong suốt */
-            border: none; /* Bỏ viền button mặc định */
-        }
-        
-        .nav-link:hover {
-            color: rgb(29 78 216); /* hover:text-blue-700 */
-            background-color: rgb(243 244 246); /* hover:bg-gray-100 */
-        }
-
-        /* Kiểu cho nav link được chọn (CSS thông thường) */
-        .nav-link.active {
-            color: rgb(29 78 216); /* text-blue-700 */
-            background-color: rgb(219 234 254); /* bg-blue-100 */
-            font-weight: 600; /* font-semibold */
+        /* Hiệu ứng hover cho card */
+        .tournament-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100 text-gray-900">
 
-    <!-- Header (Vẫn giữ Nav) -->
-    <header class="bg-white text-gray-900 shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-5">
-            <h1 class="text-3xl font-bold tracking-tight text-blue-800">Giải Đấu V-League 2025</h1>
-            <!-- Cập nhật tiêu đề phụ -->
-            <p class="text-lg text-gray-600">Thống Kê Cầu Thủ</p>
-        </div>
-        
-        <!-- Thanh Điều Hướng (Đã thay đổi class 'active') -->
-        <nav class="bg-white border-t border-gray-200">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-center space-x-0 md:space-x-2 overflow-x-auto py-2">
-                    <button id="nav-bang-xep-hang" class="nav-link">
-                        Bảng Xếp Hạng
-                    </button>
-                    <button id="nav-vong-bang" class="nav-link">
-                        Lịch/Kết Quả
-                    </button>
-                    <button id="nav-vong-loai" class="nav-link">
-                        Vòng Loại Trực Tiếp
-                    </button>
-                    <!-- Bỏ 'active' ở đây -->
-                    <button id="nav-doi-thi-dau" class="nav-link">
-                        Đội Thi Đấu
-                    </button>
-                    <!-- Thêm 'active' ở đây -->
-                    <button id="nav-thong-ke" class="nav-link active">
-                        Thống Kê
-                    </button>
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Logo / Tên Hệ Thống -->
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 text-white p-2 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
                 </div>
+                <span class="text-xl font-bold text-gray-800">League Manager</span>
             </div>
-        </nav>
+
+            <!-- User Profile (Giả lập) -->
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-medium text-gray-600 hidden sm:block">Admin</span>
+                <img class="h-8 w-8 rounded-full bg-gray-300" src="https://placehold.co/32x32/3B82F6/FFFFFF?text=A" alt="Admin Avatar">
+            </div>
+        </div>
     </header>
 
-    <!-- Main Content - ĐÃ THAY THẾ BẰNG BẢNG THỐNG KÊ -->
+    <!-- Main Content -->
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-        <div>
-            <h2 class="text-2xl font-semibold text-gray-800 mb-6">THỐNG KÊ CẦU THỦ</h2>
-            
-            <!-- Bảng thống kê -->
-            <div class="bg-white rounded-xl shadow-lg overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <!-- Icon Sắp xếp (SVG) -->
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hạng</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cầu Thủ</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Đội Thi Đấu</th>
-                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Số Trận</th>
-                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Số Áo</th>
-                            
-                            <!-- Tiêu đề có icon sắp xếp -->
-                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                <span class="flex items-center justify-center">
-                                    Số Bàn
-                                    <!-- Icon mũi tên lên/xuống -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                      <path stroke-linecap="round" stroke-linejoin="round" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
-                                    </svg>
-                                </span>
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                <span class="flex items-center justify-center">
-                                    P. Lưới
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                      <path stroke-linecap="round" stroke-linejoin="round" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
-                                    </svg>
-                                </span>
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                <span class="flex items-center justify-center">
-                                    Thẻ Vàng
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                      <path stroke-linecap="round" stroke-linejoin="round" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
-                                    </svg>
-                                </span>
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                <span class="flex items-center justify-center">
-                                    Thẻ Đỏ
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                      <path stroke-linecap="round" stroke-linejoin="round" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
-                                    </svg>
-                                </span>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <!-- Dữ liệu mẫu Cầu Thủ 1 -->
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">1</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                <!-- ĐÃ CẬP NHẬT: Thêm Avatar -->
-                                <div class="flex items-center space-x-3">
-                                    <img class="h-10 w-10 rounded-full" src="https://placehold.co/40x40/B0B0B0/FFFFFF?text=AVT" alt="Avatar">
-                                    <span class="font-bold">Nguyễn Văn Quyết</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <div class="flex items-center space-x-2">
-                                    <img class="h-6 w-6 rounded-full" src="https://placehold.co/40x40/E02424/FFFFFF?text=HFC" alt="Logo">
-                                    <span>Hanoi FC</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">4</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">10</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-700 font-bold text-center">7</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">0</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
-                                <span class="px-2.5 py-1 rounded-full bg-yellow-200 text-yellow-800 font-medium text-xs">1</span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
-                                <span class="px-2.5 py-1 rounded-full bg-red-200 text-red-800 font-medium text-xs">0</span>
-                            </td>
-                        </tr>
-                        <!-- Dữ liệu mẫu Cầu Thủ 2 -->
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">2</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                <!-- ĐÃ CẬP NHẬT: Thêm Avatar -->
-                                <div class="flex items-center space-x-3">
-                                    <img class="h-10 w-10 rounded-full" src="https://placehold.co/40x40/B0B0B0/FFFFFF?text=AVT" alt="Avatar">
-                                    <span class="font-bold">Phạm Tuấn Hải</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <div class="flex items-center space-x-2">
-                                    <img class="h-6 w-6 rounded-full" src="https://placehold.co/40x40/E02424/FFFFFF?text=HFC" alt="Logo">
-                                    <span>Hanoi FC</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">4</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">9</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-700 font-bold text-center">6</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">0</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
-                                <span class="px-2.5 py-1 rounded-full bg-yellow-200 text-yellow-800 font-medium text-xs">3</span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
-                                <span class="px-2.5 py-1 rounded-full bg-red-200 text-red-800 font-medium text-xs">0</span>
-                            </td>
-                        </tr>
-                        <!-- Dữ liệu mẫu Cầu Thủ 3 -->
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">3</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                <!-- ĐÃ CẬP NHẬT: Thêm Avatar -->
-                                <div class="flex items-center space-x-3">
-                                    <img class="h-10 w-10 rounded-full" src="https://placehold.co/40x40/B0B0B0/FFFFFF?text=AVT" alt="Avatar">
-                                    <span class="font-bold">Rafaelson</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <div class="flex items-center space-x-2">
-                                    <img class="h-6 w-6 rounded-full" src="https://placehold.co/40x40/374151/FFFFFF?text=ND" alt="Logo">
-                                    <span>Nam Dinh FC</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">4</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">14</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-700 font-bold text-center">5</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">0</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
-                                <span class="px-2.5 py-1 rounded-full bg-yellow-200 text-yellow-800 font-medium text-xs">2</span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
-                                <span class="px-2.5 py-1 rounded-full bg-red-200 text-red-800 font-medium text-xs">0</span>
-                            </td>
-                        </tr>
-                        <!-- Dữ liệu mẫu Cầu Thủ 4 -->
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">4</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                <!-- ĐÃ CẬP NHẬT: Thêm Avatar -->
-                                <div class="flex items-center space-x-3">
-                                    <img class="h-10 w-10 rounded-full" src="https://placehold.co/40x40/B0B0B0/FFFFFF?text=AVT" alt="Avatar">
-                                    <span class="font-bold">Nguyễn Tiến Linh</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <div class="flex items-center space-x-2">
-                                    <img class="h-6 w-6 rounded-full" src="https://placehold.co/40x40/CA8A04/FFFFFF?text=BFC" alt="Logo">
-                                    <span>Becamex Binh Duong</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">4</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">22</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-700 font-bold text-center">4</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">0</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
-                                <span class="px-2.5 py-1 rounded-full bg-yellow-200 text-yellow-800 font-medium text-xs">0</span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
-                                <span class="px-2.5 py-1 rounded-full bg-red-200 text-red-800 font-medium text-xs">0</span>
-                            </td>
-                        </tr>
-                         <!-- Dữ liệu mẫu Cầu Thủ 5 -->
-                         <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">5</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                <!-- ĐÃ CẬP NHẬT: Thêm Avatar -->
-                                <div class="flex items-center space-x-3">
-                                    <img class="h-10 w-10 rounded-full" src="https://placehold.co/40x40/B0B0B0/FFFFFF?text=AVT" alt="Avatar">
-                                    <span class="font-bold">Alan Grafite</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <div class="flex items-center space-x-2">
-                                    <img class="h-6 w-6 rounded-full" src="https://placehold.co/40x40/7C3AED/FFFFFF?text=BD" alt="Logo">
-                                    <span>Binh Dinh FC</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">4</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">72</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-700 font-bold text-center">4</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">0</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
-                                <span class="px-2.5 py-1 rounded-full bg-yellow-200 text-yellow-800 font-medium text-xs">1</span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
-                                <span class="px-2.5 py-1 rounded-full bg-red-200 text-red-800 font-medium text-xs">1</span>
-                            </td>
-                        </tr>
-                        <!-- Dữ liệu mẫu Cầu Thủ 6 -->
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">6</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                <!-- ĐÃ CẬP NHẬT: Thêm Avatar -->
-                                <div class="flex items-center space-x-3">
-                                    <img class="h-10 w-10 rounded-full" src="https://placehold.co/40x40/B0B0B0/FFFFFF?text=AVT" alt="Avatar">
-                                    <span class="font-bold">Bùi Vĩ Hào</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <div class="flex items-center space-x-2">
-                                    <img class="h-6 w-6 rounded-full" src="https://placehold.co/40x40/CA8A04/FFFFFF?text=BFC" alt="Logo">
-                                    <span>Becamex Binh Duong</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">4</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">11</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-700 font-bold text-center">3</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">1</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
-                                <span class="px-2.5 py-1 rounded-full bg-yellow-200 text-yellow-800 font-medium text-xs">2</span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
-                                <span class="px-2.5 py-1 rounded-full bg-red-200 text-red-800 font-medium text-xs">0</span>
-                            </td>
-                        </tr>
-                        <!-- Dữ liệu mẫu Cầu Thủ 7 -->
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">7</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                <!-- ĐÃ CẬP NHẬT: Thêm Avatar -->
-                                <div class="flex items-center space-x-3">
-                                    <img class="h-10 w-10 rounded-full" src="https://placehold.co/40x40/B0B0B0/FFFFFF?text=AVT" alt="Avatar">
-                                    <span class="font-bold">Geovane Magno</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <div class="flex items-center space-x-2">
-                                    <img class="h-6 w-6 rounded-full" src="https://placehold.co/40x40/111827/FFFFFF?text=CAHN" alt="Logo">
-                                    <span>Cong An Ha Noi</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">4</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">94</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-700 font-bold text-center">3</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">0</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
-                                <span class="px-2.5 py-1 rounded-full bg-yellow-200 text-yellow-800 font-medium text-xs">0</span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
-                                <span class="px-2.5 py-1 rounded-full bg-red-200 text-red-800 font-medium text-xs">0</span>
-                            </td>
-                        </tr>
-                        <!-- Thêm các cầu thủ khác nếu cần -->
-                    </tbody>
-                </table>
+        <!-- Tiêu đề & Bộ lọc -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Danh Sách Giải Đấu</h1>
+                <p class="text-gray-500 mt-1">Quản lý và theo dõi tất cả các giải đấu của bạn.</p>
             </div>
+            
+            <!-- Nút tìm kiếm đơn giản -->
+            <div class="relative">
+                <input type="text" placeholder="Tìm kiếm giải đấu..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full sm:w-64 transition-shadow">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 absolute left-3 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Lưới Giải Đấu -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+            <!-- Đã xóa thẻ Tạo Giải Đấu Mới ở đây -->
+
+            <!-- Giải Đấu 1 -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden tournament-card flex flex-col transition-transform duration-300 cursor-pointer">
+                <!-- Banner / Logo khu vực -->
+                <div class="relative h-40 bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center p-4">
+                    <div class="absolute top-3 right-3">
+                        <span class="bg-white/20 backdrop-blur-sm text-white text-xs font-bold px-2 py-1 rounded">Đang diễn ra</span>
+                    </div>
+                    <img class="h-24 w-24 object-contain drop-shadow-lg" src="https://placehold.co/100x100/FFFFFF/E02424?text=V-L" alt="Logo V-League">
+                </div>
+                <!-- Nội dung -->
+                <div class="p-5 flex-1 flex flex-col">
+                    <h3 class="text-lg font-bold text-gray-900 mb-1">V-League 2025</h3>
+                    <p class="text-sm text-gray-500 mb-4">Giải Vô Địch Quốc Gia</p>
+                    
+                    <div class="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-2.37M16 13a4 4 0 100-8 4 4 0 000 8zM10 13a4 4 0 100-8 4 4 0 000 8zM4 20h5v-2a3 3 0 00-5.356-2.37" />
+                            </svg>
+                            <span class="font-semibold text-gray-700">14 <span class="text-gray-500 font-normal text-xs">Đội</span></span>
+                        </div>
+                        <span class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center">
+                            Quản lý
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Giải Đấu 2 -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden tournament-card flex flex-col transition-transform duration-300 cursor-pointer">
+                <div class="relative h-40 bg-gradient-to-br from-blue-500 to-indigo-700 flex items-center justify-center p-4">
+                    <div class="absolute top-3 right-3">
+                        <span class="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded shadow-sm">Sắp tới</span>
+                    </div>
+                    <img class="h-24 w-24 object-contain drop-shadow-lg" src="https://placehold.co/100x100/FFFFFF/1D4ED8?text=Cup" alt="Logo Cúp QG">
+                </div>
+                <div class="p-5 flex-1 flex flex-col">
+                    <h3 class="text-lg font-bold text-gray-900 mb-1">Cúp Quốc Gia 2025</h3>
+                    <p class="text-sm text-gray-500 mb-4">Giải đấu loại trực tiếp</p>
+                    
+                    <div class="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-2.37M16 13a4 4 0 100-8 4 4 0 000 8zM10 13a4 4 0 100-8 4 4 0 000 8zM4 20h5v-2a3 3 0 00-5.356-2.37" />
+                            </svg>
+                            <span class="font-semibold text-gray-700">24 <span class="text-gray-500 font-normal text-xs">Đội</span></span>
+                        </div>
+                        <span class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center">
+                            Chi tiết
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Giải Đấu 3 -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden tournament-card flex flex-col transition-transform duration-300 cursor-pointer">
+                <div class="relative h-40 bg-gradient-to-br from-emerald-500 to-green-700 flex items-center justify-center p-4">
+                    <div class="absolute top-3 right-3">
+                        <span class="bg-gray-600 text-white text-xs font-bold px-2 py-1 rounded shadow-sm">Đã kết thúc</span>
+                    </div>
+                    <img class="h-24 w-24 object-contain drop-shadow-lg" src="https://placehold.co/100x100/FFFFFF/047857?text=HN1" alt="Logo Hạng Nhất">
+                </div>
+                <div class="p-5 flex-1 flex flex-col">
+                    <h3 class="text-lg font-bold text-gray-900 mb-1">Giải Hạng Nhất 2024</h3>
+                    <p class="text-sm text-gray-500 mb-4">Mùa giải trước</p>
+                    
+                    <div class="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-2.37M16 13a4 4 0 100-8 4 4 0 000 8zM10 13a4 4 0 100-8 4 4 0 000 8zM4 20h5v-2a3 3 0 00-5.356-2.37" />
+                            </svg>
+                            <span class="font-semibold text-gray-700">12 <span class="text-gray-500 font-normal text-xs">Đội</span></span>
+                        </div>
+                        <span class="text-gray-500 hover:text-gray-700 text-sm font-medium flex items-center">
+                            Xem lại
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Giải Đấu 4 -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden tournament-card flex flex-col transition-transform duration-300 cursor-pointer">
+                <div class="relative h-40 bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center p-4">
+                    <div class="absolute top-3 right-3">
+                        <span class="bg-white/20 backdrop-blur-sm text-white text-xs font-bold px-2 py-1 rounded">Đang đăng ký</span>
+                    </div>
+                    <img class="h-24 w-24 object-contain drop-shadow-lg" src="https://placehold.co/100x100/FFFFFF/F59E0B?text=U21" alt="Logo U21">
+                </div>
+                <div class="p-5 flex-1 flex flex-col">
+                    <h3 class="text-lg font-bold text-gray-900 mb-1">Giải U21 Quốc Gia</h3>
+                    <p class="text-sm text-gray-500 mb-4">Giải trẻ - Vòng loại</p>
+                    
+                    <div class="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-2.37M16 13a4 4 0 100-8 4 4 0 000 8zM10 13a4 4 0 100-8 4 4 0 000 8zM4 20h5v-2a3 3 0 00-5.356-2.37" />
+                            </svg>
+                            <span class="font-semibold text-gray-700">8 <span class="text-gray-500 font-normal text-xs">Đội</span></span>
+                        </div>
+                        <span class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center">
+                            Thiết lập
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-gray-400 mt-12">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center">
-            <p>&copy; 2025 Ban Tổ Chức Giải Đấu. Mọi quyền được bảo lưu.</p>
+    <footer class="bg-white border-t border-gray-200 mt-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between text-sm text-gray-500">
+            <p>&copy; 2025 League Manager System.</p>
+            <div class="flex space-x-4 mt-4 sm:mt-0">
+                <a href="#" class="hover:text-gray-900">Hỗ trợ</a>
+                <a href="#" class="hover:text-gray-900">Điều khoản</a>
+            </div>
         </div>
     </footer>
 
-    <!-- Toàn bộ JavaScript đã được loại bỏ -->
-
 </body>
 </html>
-
